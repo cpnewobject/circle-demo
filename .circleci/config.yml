@@ -11,9 +11,24 @@ jobs:
           fingerprints:
             - "f4:df:5c:e0:d9:7a:bd:b2:98:b1:76:8d:ff:74:43:ef"
       - checkout
+      - restore_cache:
+          keys:
+            - dependencies_demo
       - run:
          name: Install
          command: yarn install
+      - save_cache:
+          paths:
+            - node_modules
+          key: dependencies_demo
       - run:
          name: Build
          command: yarn build
+      - run:
+         name: Prepare shell commands
+         # shell chmod +x 赋予执行权限
+         # 执行shell脚本
+         command: chmod +x scripts/deploy.sh
+      - run:
+          name: Run deploy to Githun pages
+          command: ./scripts/deploy.sh
